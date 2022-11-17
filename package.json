@@ -1,0 +1,27 @@
+{
+  "name": "project-gen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.3",
+  "private": true,
+  "workspaces": [
+    "workspaces/e2e-tests/*",
+    "workspaces/packages/*"
+  ],
+  "dependencies": {
+    "typescript": "^4.8.2"
+  },
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "scripts": {
+    "build:compile": "rm -rf \"$0\"/lib && mkdir -p \"$0\"/lib && node scripts/compile \"$@\"",
+    "typecheck:all": "tsc --noEmit",
+    "postpack": "rm -rf lib",
+    "prepack": "run build:compile \"$(pwd)\""
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.16"
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "typescript",
+    "source": "Root project",
+    "type": "devDependencies"
+  },
+  {
+    "name": "ts-node",
+    "source": "Root project",
+    "type": "devDependencies"
+  },
+  {
+    "name": "@types/node",
+    "source": "Root project",
+    "type": "devDependencies"
+  },
+  {
+    "name": "typescript",
+    "source": "Typescript",
+    "type": "devDependencies"
+  },
+  {
+    "name": "ts-node",
+    "source": "Typescript",
+    "type": "devDependencies"
+  },
+  {
+    "name": "@types/node",
+    "source": "Typescript",
+    "type": "devDependencies"
+  }
+]
