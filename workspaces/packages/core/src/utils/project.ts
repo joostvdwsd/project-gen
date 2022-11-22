@@ -1,6 +1,6 @@
 import { Dependencies, DependencyType } from "../packageManagers/dependencies";
 import { PackageJson } from "../packageManagers/package-json";
-import { Component } from "./component";
+import { RootComponent } from "./component";
 import { Executor } from "./executor";
 import { LocalFileSystem } from "./filesystem";
 import { Logger } from "./logger";
@@ -9,7 +9,7 @@ export interface ProjectOptions {
   readonly rootFolder?: string;
 }
 
-export class Project extends Component{
+export class Project extends RootComponent {
   readonly rootFolder: string;
   
   public readonly configFolder = '.project-gen';
@@ -20,12 +20,12 @@ export class Project extends Component{
     this.options = options ?? {}
     this.rootFolder = options?.rootFolder ?? process.cwd();
 
-    this.addChild(new Executor());
-    this.addChild(new Logger());
-    this.addChild(new LocalFileSystem());
+    new Executor(this);
+    new Logger(this);
+    new LocalFileSystem(this);
 
     const packageJson = new PackageJson(this);
-    packageJson.addScript('project', 'ts-node .project.ts');
+    packageJson.addScript('pg', 'ts-node .project.ts');
 
     const deps = new Dependencies(this);
     deps.add({

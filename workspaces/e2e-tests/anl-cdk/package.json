@@ -2,7 +2,8 @@
   "name": "anl-cdk",
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
-    "@project-gen/anl-cdk": "workspace:^",
+    "@project-gen/cdk": "workspace:^",
+    "@project-gen/core": "workspace:^",
     "@types/node": "^18.7.16",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.3"
@@ -10,7 +11,25 @@
   "scripts": {
     "project": "ts-node .project.ts",
     "compile": "tsc",
-    "typecheck": "tsc --noEmit --incremental"
+    "typecheck": "tsc --noEmit --incremental",
+    "synth": "cdk synth",
+    "diff": "cdk diff --app './cdk.out/assembly-dev'",
+    "deploy": "cdk deploy --app './cdk.out/assembly-dev'",
+    "destroy": "cdk destroy --app './cdk.out/assembly-dev'",
+    "pg": "ts-node .project.ts",
+    "diff:test": "cdk diff --app './cdk.out/assembly-test'",
+    "diff:prod": "cdk diff --app './cdk.out/assembly-prod'",
+    "deploy:test": "cdk deploy --app './cdk.out/assembly-test'",
+    "deploy:prod": "cdk deploy --app './cdk.out/assembly-prod'",
+    "destroy:test": "cdk destroy --app './cdk.out/assembly-test'",
+    "destroy:prod": "cdk destroy --app './cdk.out/assembly-prod'"
   },
-  "types": "src/index.ts"
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "aws-cdk": "^2.51.0",
+    "aws-cdk-lib": "^2.51.0",
+    "constructs": "^10.1.163",
+    "source-map-support": "^0.5.21"
+  }
 }

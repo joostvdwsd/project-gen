@@ -1,0 +1,8 @@
+{
+  "name": "@project-gen/cdk",
+  "packageManager": "yarn@3.2.3",
+  "dependencies": {
+    "@project-gen/core": "workspace:^"
+  },
+  "main": "src/index.ts"
+}

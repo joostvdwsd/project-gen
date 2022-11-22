@@ -1,7 +1,7 @@
 import { JsonFile } from "../files";
 import { Dependencies, DependencyType } from "../packageManagers/dependencies";
 import { PackageJson } from "../packageManagers/package-json";
-import { Component } from "../utils";
+import { RootComponent, SingletonComponent } from "../utils";
 
 const DEFAULT_TS_CONFIG = {
   "compilerOptions": {
@@ -41,14 +41,14 @@ const DEFAULT_TS_CONFIG = {
 };
 
 
-export class TypeScript extends Component {
+export class TypeScript extends SingletonComponent {
 
   public tsConfig = DEFAULT_TS_CONFIG;
 
-  constructor() {
-    super();
+  constructor(parent: RootComponent) {
+    super(parent);
 
-    new JsonFile(this, {
+    new JsonFile(this, 'tsconfig.json', {
       path: ['tsconfig.json'],
       object: () => this.tsConfig
     })

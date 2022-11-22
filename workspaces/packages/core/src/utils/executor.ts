@@ -1,11 +1,11 @@
 import * as child_process from 'child_process';
-import { Component } from './component';
+import { SingletonComponent } from './component';
 import { Logger } from './logger';
 import { Project } from './project';
 
 const MAX_BUFFER = 10 * 1024 * 1024;
 
-export class Executor extends Component {
+export class Executor extends SingletonComponent {
 
   get project() { return this.resolve(Project) }
   get logger() { return this.resolve(Logger) }

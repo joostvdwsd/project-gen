@@ -1,16 +1,16 @@
 import { TextFile } from "../files";
-import { Component } from "../utils/component";
+import { RootComponent, SingletonComponent } from "../utils/component";
 
 export interface GitIgnoreProps {
   readonly patterns: string[];
 }
 
-export class GitIgnore extends Component {
+export class GitIgnore extends SingletonComponent {
   private file: TextFile;
 
-  constructor(props?: GitIgnoreProps) {
-    super();
-    this.file = new TextFile(this, {
+  constructor(parent: RootComponent, props?: GitIgnoreProps) {
+    super(parent);
+    this.file = new TextFile(this, '.gitignore', {
       path: ['.gitignore'],
     });
 

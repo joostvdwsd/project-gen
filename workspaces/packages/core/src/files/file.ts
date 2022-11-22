@@ -1,5 +1,5 @@
 import { FileSystem } from "../utils";
-import { Component } from "../utils/component";
+import { BaseComponent, Component } from "../utils/component";
 
 export interface FileOptions {
   readonly path: string[];
@@ -11,8 +11,8 @@ export class File extends Component {
 
   public readonly path: string[];
 
-  constructor(parent: Component, properties: FileOptions) {
-    super(parent);
+  constructor(parent: BaseComponent, id: string, properties: FileOptions) {
+    super(parent, id);
     this.path = properties.path;
   }
 }

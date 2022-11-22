@@ -1,7 +1,7 @@
 
 import { existsSync, promises as fs, readFileSync } from 'fs';
 import { join } from 'path';
-import { Component } from './component';
+import { SingletonComponent } from './component';
 import { Project } from './project';
 
 class NotImplemented extends Error {
@@ -10,7 +10,7 @@ class NotImplemented extends Error {
   }
 }
 
-export class FileSystem extends Component {
+export class FileSystem extends SingletonComponent {
 
   get project() { return this.resolve(Project) }
 

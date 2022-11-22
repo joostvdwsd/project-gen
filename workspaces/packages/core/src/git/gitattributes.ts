@@ -1,16 +1,17 @@
 import { TextFile } from "../files";
-import { Component } from "../utils/component";
+import { RootComponent, SingletonComponent } from "../utils/component";
 
 export interface GitAttributesProps {
   readonly patterns: string[];
 }
 
-export class GitAttributes extends Component {
+export class GitAttributes extends SingletonComponent {
   private file: TextFile;
 
-  constructor(props?: GitAttributesProps) {
-    super();
-    this.file = new TextFile(this, {
+  constructor(parent: RootComponent, props?: GitAttributesProps) {
+    super(parent);
+
+    this.file = new TextFile(this, '.gitattributes', {
       path: ['.gitattributes'],
     });
 

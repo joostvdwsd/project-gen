@@ -1,4 +1,4 @@
-import { Component, FileSystem, Project } from "../utils";
+import { BaseComponent, FileSystem, Project, SingletonComponent } from "../utils";
 import { PackageJson } from "./package-json";
 
 export enum DependencyType {
@@ -17,7 +17,7 @@ export interface SourceDependency extends Dependency {
   source: string;
 }
 
-export class Dependencies extends Component {
+export class Dependencies extends SingletonComponent {
 
   private previousDependencies : SourceDependency[] = [];
   private dependencies : SourceDependency[] = [];
@@ -34,7 +34,7 @@ export class Dependencies extends Component {
     })
   }
 
-  constructor(parent: Component) {
+  constructor(parent: BaseComponent) {
     super(parent);
 
     const configFile = [this.project.configFolder, 'dependencies.json'];

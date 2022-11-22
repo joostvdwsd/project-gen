@@ -1,10 +1,10 @@
 import { JsonFile } from "../files";
-import { Component, FileSystem } from "../utils";
+import { RootComponent, FileSystem, SingletonComponent } from "../utils";
 
-export class PackageJson extends Component {
+export class PackageJson extends SingletonComponent {
   public raw: any;  
 
-  constructor(parent: Component) {
+  constructor(parent: RootComponent) {
     super(parent);
     
     const fileSystem = this.resolve(FileSystem);
@@ -20,7 +20,7 @@ export class PackageJson extends Component {
       this.raw = {};
     }
 
-    new JsonFile(this, {
+    new JsonFile(this, 'package.json', {
       path: location,
       object: () => this.raw
     })

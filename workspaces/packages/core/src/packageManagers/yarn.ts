@@ -1,8 +1,8 @@
 import { Executor, Logger } from "../utils";
-import { Component } from "../utils/component";
+import { SingletonComponent } from "../utils/component";
 import { Dependencies, Dependency, DependencyType } from "./dependencies";
 
-export class Yarn extends Component {
+export class Yarn extends SingletonComponent {
   private get executor() { return this.resolve(Executor) };
   private get dependencies() { return this.resolve(Dependencies) };
   

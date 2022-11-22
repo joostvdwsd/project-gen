@@ -1,4 +1,4 @@
-import { Component } from '../utils';
+import { BaseComponent } from '../utils';
 import { File, FileOptions } from './file';
 
 export type ObjectFileContent = any | (() => any);
@@ -11,8 +11,8 @@ export abstract class ObjectFile extends File {
 
   protected object: ObjectFileContent;
 
-  constructor(parent: Component, props: ObjectFileOptions) {
-    super(parent, props);
+  constructor(parent: BaseComponent, id: string, props: ObjectFileOptions) {
+    super(parent, id, props);
     this.object = props.object;
   }
 

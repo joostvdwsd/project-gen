@@ -11,8 +11,8 @@ export class SourceFile extends File {
 
   protected options: SourceFileOptions;
 
-  constructor(parent: Component, options: SourceFileOptions) {
-    super(parent, options);
+  constructor(parent: Component, id: string, options: SourceFileOptions) {
+    super(parent, id, options);
     this.options = options;
   }
   async synthesize(): Promise<void> {

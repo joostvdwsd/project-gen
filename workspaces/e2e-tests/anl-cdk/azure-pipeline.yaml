@@ -1,0 +1,81 @@
+variables:
+ - group: aws-dev
+ - name: PG_AZDO_GROUP_MAPPING_1
+   value: $SECRET_VALUE
+ - group: aws-prod
+ - name: PG_AZDO_GROUP_MAPPING_3
+   value: $SECRET_VALUE
+stages:
+ - stage: build
+   jobs:
+    - job: build
+      steps:
+       - script: cdk synth
+       - publish: ./cdk.out
+         artifact: cdk.out
+ - stage: diff:dev
+   jobs:
+    - deployment: diff:dev
+      environment: dev
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk diff --app './cdk.out/assembly-dev' --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_1 }}
+ - stage: deploy:dev
+   jobs:
+    - deployment: deploy:dev
+      environment: dev
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk deploy --app './cdk.out/assembly-dev' --require-approval never --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_1 }}
+ - stage: diff:test
+   jobs:
+    - deployment: diff:test
+      environment: test
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk diff --app './cdk.out/assembly-test'
+ - stage: deploy:test
+   jobs:
+    - deployment: deploy:test
+      environment: test
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk deploy --app './cdk.out/assembly-test' --require-approval never
+ - stage: diff:prod
+   jobs:
+    - deployment: diff:prod
+      environment: prod
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk diff --app './cdk.out/assembly-prod' --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_3 }}
+ - stage: deploy:prod
+   jobs:
+    - deployment: deploy:prod
+      environment: prod
+      strategy:
+       runOnce:
+        deploy:
+         steps:
+          - download: ./cdk.out
+            artifact: cdk.out
+          - script: cdk deploy --app './cdk.out/assembly-prod' --require-approval never --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_3 }}

@@ -1,6 +1,6 @@
-import { Component } from './component';
+import { SingletonComponent } from './component';
 
-export class Logger extends Component {
+export class Logger extends SingletonComponent {
 
   verbose(...text: any[]) {
     console.log(...text);

@@ -1,30 +1,33 @@
 
 export type ClassType<T> = new (...args: [...any]) => T;
 
-export class Component {
+export abstract class BaseComponent {
+  private parent!: BaseComponent | null;
 
-  private parent!: Component | null;
+  protected children: BaseComponent[] = [];
 
-  protected allComponents: Component[] = [];
+  constructor(parent?: BaseComponent) {
+    if (parent) {
+      parent.addChild(this);
+    }
+  }
 
-  protected children: Component[] = [];
-
-  public setParent(parent: Component | null) {
+  public setParent(parent: BaseComponent | null) {
     this.parent = parent;
   }
 
-  public getParent(): Component | null {
+  public getParent(): BaseComponent | null {
     return this.parent;
   }
 
-  public getRoot(): Component {
+  public getRoot(): RootComponent {
     if (this.parent) {
       return this.parent.getRoot();
     }
     return this;
   }
 
-  public find<T extends Component>(componentType: ClassType<T>): T | undefined {
+  public find<T extends BaseComponent>(componentType: ClassType<T>): T | undefined {
     if (this instanceof componentType) {
       return this;
     }
@@ -40,10 +43,10 @@ export class Component {
       return parentResult;
     }
 
-    return this.getRoot().allComponents.find((component) => component instanceof componentType) as T;
+    return this.getRoot().children.find((component) => component instanceof componentType) as T;
   }
 
-  public resolve<T extends Component>(componentType: ClassType<T>): T {
+  public resolve<T extends BaseComponent>(componentType: ClassType<T>): T {
     const result = this.find(componentType);
     if (!result) {
       throw new Error(`Required component '${componentType}' not found`);
@@ -55,27 +58,16 @@ export class Component {
    * A composite object can add or remove other components (both simple or
    * complex) to or from its child list.
    */
-  public addChild(component: Component): void {
+  public addChild(component: BaseComponent) {
     this.children.push(component);
     component.setParent(this);
-
-    this.getRoot().allComponents.push(component);
   }
 
   public removeChild(component: Component): void {
-    const allComponentIndex = this.getRoot().allComponents.indexOf(component);
-    this.getRoot().allComponents.splice(allComponentIndex, 1);
-
     const componentIndex = this.children.indexOf(component);
     this.children.splice(componentIndex, 1);
 
     component.setParent(null);
-  }
-
-  constructor(parent?: Component) {
-    if (parent) {
-      parent.addChild(this);
-    }
   }
 
   async preSynthesize() {
@@ -88,5 +80,23 @@ export class Component {
 
   async postSynthesize() {
     await Promise.all(this.children.map((component) => component.postSynthesize()))
+  }
+}
+
+export class RootComponent extends BaseComponent {
+  constructor() {
+    super();
+  }
+}
+
+export class SingletonComponent extends BaseComponent {
+  constructor(parent: RootComponent) {
+    super(parent);
+  }
+}
+
+export class Component extends BaseComponent {
+  constructor(parent: BaseComponent, public id: string) {
+    super(parent);
   }
 }
