@@ -1,12 +1,12 @@
-import { SingletonComponent } from "@project-gen/core";
-import { PipelineStage } from "./pipeline-stage";
+import { Component } from "@project-gen/core";
+import { PipelineStage } from "./pipeline-stage-builder";
 
 export interface StageOptions {
-  stageEnvironment?: string;
+  environment?: string;
   depends?: string | string[];
 }
 
-export class Pipeline extends SingletonComponent {
+export class PipelineBuilder extends Component {  
   addStage(_name: string, _stageOptions?: StageOptions) : PipelineStage {
     throw new Error('Not implemented');
   }

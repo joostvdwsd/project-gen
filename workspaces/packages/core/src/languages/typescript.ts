@@ -48,7 +48,7 @@ export class TypeScript extends SingletonComponent {
   constructor(parent: RootComponent) {
     super(parent);
 
-    new JsonFile(this, 'tsconfig.json', {
+    new JsonFile(this, {
       path: ['tsconfig.json'],
       object: () => this.tsConfig
     })

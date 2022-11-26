@@ -71,7 +71,9 @@ export abstract class BaseComponent {
   }
 
   async preSynthesize() {
-    await Promise.all(this.children.map((component) => component.preSynthesize()))
+    for (let child of this.children) {
+      await child.preSynthesize();
+    }
   }
 
   async synthesize() {
@@ -96,7 +98,7 @@ export class SingletonComponent extends BaseComponent {
 }
 
 export class Component extends BaseComponent {
-  constructor(parent: BaseComponent, public id: string) {
+  constructor(parent: BaseComponent) {
     super(parent);
   }
 }

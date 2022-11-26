@@ -1,3 +1,3 @@
-export * from './pipeline';
-export * from './pipeline-stage';
+export * from './pipeline-builder';
+export * from './pipeline-stage-builder';
 export * from './steps';

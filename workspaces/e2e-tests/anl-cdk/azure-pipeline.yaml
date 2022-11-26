@@ -1,81 +1,153 @@
+resources:
+ containers:
+  - container: node
+    image: nodejscontainer
 variables:
  - group: aws-dev
  - name: PG_AZDO_GROUP_MAPPING_1
    value: $SECRET_VALUE
  - group: aws-prod
- - name: PG_AZDO_GROUP_MAPPING_3
+ - name: PG_AZDO_GROUP_MAPPING_2
    value: $SECRET_VALUE
 stages:
  - stage: build
    jobs:
     - job: build
+      variables: []
+      container: node
       steps:
        - script: cdk synth
        - publish: ./cdk.out
          artifact: cdk.out
- - stage: diff:dev
+ - stage: diff_dev
    jobs:
-    - deployment: diff:dev
-      environment: dev
+    - deployment: diff_dev
+      variables:
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_3
+         value: $AWS_ROLE_ARN
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_4
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_3 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_4 }}
           - download: ./cdk.out
             artifact: cdk.out
           - script: cdk diff --app './cdk.out/assembly-dev' --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_1 }}
- - stage: deploy:dev
+ - stage: deploy_dev
    jobs:
-    - deployment: deploy:dev
-      environment: dev
+    - deployment: deploy_dev
+      variables:
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_5
+         value: $AWS_ROLE_ARN
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_6
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_5 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_6 }}
           - download: ./cdk.out
             artifact: cdk.out
           - script: cdk deploy --app './cdk.out/assembly-dev' --require-approval never --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_1 }}
- - stage: diff:test
+ - stage: diff_test
    jobs:
-    - deployment: diff:test
-      environment: test
+    - deployment: diff_test
+      variables:
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_7
+         value: $AWS_ROLE_ARN
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_8
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_7 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_8 }}
           - download: ./cdk.out
             artifact: cdk.out
           - script: cdk diff --app './cdk.out/assembly-test'
- - stage: deploy:test
+ - stage: deploy_test
    jobs:
-    - deployment: deploy:test
-      environment: test
+    - deployment: deploy_test
+      variables:
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_9
+         value: $AWS_ROLE_ARN
+       - group: aws-dev
+       - name: PG_AZDO_GROUP_MAPPING_10
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_9 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_10 }}
           - download: ./cdk.out
             artifact: cdk.out
           - script: cdk deploy --app './cdk.out/assembly-test' --require-approval never
- - stage: diff:prod
+ - stage: diff_prod
    jobs:
-    - deployment: diff:prod
-      environment: prod
+    - deployment: diff_prod
+      variables:
+       - group: aws-ops
+       - name: PG_AZDO_GROUP_MAPPING_11
+         value: $AWS_ROLE_ARN
+       - group: aws-ops
+       - name: PG_AZDO_GROUP_MAPPING_12
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_11 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_12 }}
           - download: ./cdk.out
             artifact: cdk.out
-          - script: cdk diff --app './cdk.out/assembly-prod' --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_3 }}
- - stage: deploy:prod
+          - script: cdk diff --app './cdk.out/assembly-prod' --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_2 }}
+ - stage: deploy_prod
    jobs:
-    - deployment: deploy:prod
-      environment: prod
+    - deployment: deploy_prod
+      variables:
+       - group: aws-ops
+       - name: PG_AZDO_GROUP_MAPPING_13
+         value: $AWS_ROLE_ARN
+       - group: aws-ops
+       - name: PG_AZDO_GROUP_MAPPING_14
+         value: $AWS_EXTERNAL_ID
+      container: node
       strategy:
        runOnce:
         deploy:
          steps:
+          - task: AssumeRoleTask
+            inputs:
+             ROLE_ARN: ${{ variables.PG_AZDO_GROUP_MAPPING_13 }}
+             EXTERNAL_ID: ${{ variables.PG_AZDO_GROUP_MAPPING_14 }}
           - download: ./cdk.out
             artifact: cdk.out
-          - script: cdk deploy --app './cdk.out/assembly-prod' --require-approval never --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_3 }}
+          - script: cdk deploy --app './cdk.out/assembly-prod' --require-approval never --parameter test=${{ variables.PG_AZDO_GROUP_MAPPING_2 }}

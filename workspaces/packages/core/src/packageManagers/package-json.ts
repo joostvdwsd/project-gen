@@ -20,7 +20,7 @@ export class PackageJson extends SingletonComponent {
       this.raw = {};
     }
 
-    new JsonFile(this, 'package.json', {
+    new JsonFile(this, {
       path: location,
       object: () => this.raw
     })

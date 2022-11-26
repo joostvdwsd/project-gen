@@ -10,7 +10,7 @@ export class GitIgnore extends SingletonComponent {
 
   constructor(parent: RootComponent, props?: GitIgnoreProps) {
     super(parent);
-    this.file = new TextFile(this, '.gitignore', {
+    this.file = new TextFile(this, {
       path: ['.gitignore'],
     });
 

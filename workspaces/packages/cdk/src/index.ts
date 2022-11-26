@@ -1,4 +1,4 @@
-export * from './stages';
+export * from './environments';
 export * from './azure-devops';
 export * from './pipeline';
 export * from './cdk-run-scripts';

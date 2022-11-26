@@ -1,6 +1,6 @@
 import { RootComponent, SingletonComponent } from "@project-gen/core";
 import { PackageJson } from "@project-gen/core/src/packageManagers/package-json";
-import { Stages } from "./stages";
+import { Environments } from "./environments";
 
 /**
  * Generates conveniance scripts in package json for cdk development
@@ -13,7 +13,7 @@ export class CdkRunScripts extends SingletonComponent {
   async preSynthesize() {
     super.preSynthesize();
     const packageJson = this.resolve(PackageJson);
-    const stages = this.find(Stages);
+    const stages = this.find(Environments);
 
     packageJson.addScript(`synth`, `cdk synth`);
 

@@ -11,8 +11,8 @@ export abstract class ObjectFile extends File {
 
   protected object: ObjectFileContent;
 
-  constructor(parent: BaseComponent, id: string, props: ObjectFileOptions) {
-    super(parent, id, props);
+  constructor(parent: BaseComponent, props: ObjectFileOptions) {
+    super(parent, props);
     this.object = props.object;
   }
 

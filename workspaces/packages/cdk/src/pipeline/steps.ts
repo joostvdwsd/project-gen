@@ -31,8 +31,8 @@ export function isDownloadArtifactStep(step : PipelineStepBase) : step is Pipeli
   return (step as any).downloadPath !== undefined;
 }
 
-export type PipelineStep = PipelineScriptStep | PipelinePublishArtifactStep | PipelineDownloadArtifactStep;
+export type PipelineGenericStep = PipelineScriptStep | PipelinePublishArtifactStep | PipelineDownloadArtifactStep;
 
 export interface PipelineStepList {
-  addStep(step: PipelineStep) : void;
+  addGenericStep(step: PipelineGenericStep) : void;
 }

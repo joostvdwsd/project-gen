@@ -5,6 +5,8 @@ export interface AzureDevopsVariableHolder {
   variables: AzureDevops.VariableItem[];
 }
 
+let increment = 1;
+
 export class AzureDevopsGroupVariable implements PipelineDynamicVariable {
   mappingVariableName : string;
 
@@ -14,7 +16,7 @@ export class AzureDevopsGroupVariable implements PipelineDynamicVariable {
     }
     parent.variables.push(groupVariable);
 
-    this.mappingVariableName = `PG_AZDO_GROUP_MAPPING_${parent.variables.length}`;
+    this.mappingVariableName = `PG_AZDO_GROUP_MAPPING_${increment++}`;
 
     const mappingVariable : AzureDevops.VariableNameValue = {
       name: this.mappingVariableName,

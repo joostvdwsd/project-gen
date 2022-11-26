@@ -11,7 +11,7 @@ export class GitAttributes extends SingletonComponent {
   constructor(parent: RootComponent, props?: GitAttributesProps) {
     super(parent);
 
-    this.file = new TextFile(this, '.gitattributes', {
+    this.file = new TextFile(this, {
       path: ['.gitattributes'],
     });
 

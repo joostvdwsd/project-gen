@@ -11,8 +11,8 @@ export class File extends Component {
 
   public readonly path: string[];
 
-  constructor(parent: BaseComponent, id: string, properties: FileOptions) {
-    super(parent, id);
+  constructor(parent: BaseComponent, properties: FileOptions) {
+    super(parent);
     this.path = properties.path;
   }
 }

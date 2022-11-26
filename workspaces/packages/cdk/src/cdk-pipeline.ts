@@ -1,11 +1,15 @@
-import { SingletonComponent } from "@project-gen/core";
-import { Pipeline } from "./pipeline";
+import { Component } from "@project-gen/core";
+import { PipelineBuilder } from "./pipeline";
 import { PipelineVariable } from "./pipeline/pipeline-variable";
-import { Stages } from "./stages";
+import { Environments } from "./environments";
 
-export class CdkPipeline extends SingletonComponent {
+export class CdkPipeline extends Component {
 
   public readonly parameters: Record<string, Record<string, PipelineVariable>> = {};
+
+  constructor(pipeline: PipelineBuilder) {
+    super(pipeline);
+  }
 
   addParameter(stage: string, name: string, variable: PipelineVariable) {
     if (!this.parameters[stage]) {
@@ -19,17 +23,16 @@ export class CdkPipeline extends SingletonComponent {
     this.addParameter('default', name, variable);
   }
 
-  async preSynthesize() {
-    super.preSynthesize();
-    const pipeline = this.resolve(Pipeline);
-    const stages = this.find(Stages);
+  generate() {
+    const pipeline = this.resolve(PipelineBuilder);
+    const stages = this.find(Environments);
 
     const buildStage = pipeline.addStage('build');
-    buildStage.execute.addStep({
+    buildStage.execute.addGenericStep({
       script: 'cdk synth',
     });
 
-    buildStage.postExecute.addStep({
+    buildStage.postExecute.addGenericStep({
       publishPath: './cdk.out',
       artifactName: 'cdk.out'
     });
@@ -37,43 +40,43 @@ export class CdkPipeline extends SingletonComponent {
     if (stages) {
       stages.keys.forEach((stage) => {
         const diffStage = pipeline.addStage(`diff:${stage}`, {
-          stageEnvironment: stage,
+          environment: stage,
         });
 
-        diffStage.preExecute.addStep({
+        diffStage.preExecute.addGenericStep({
           downloadPath: './cdk.out',
           artifactName: 'cdk.out'
         });
 
-        diffStage.execute.addStep({
+        diffStage.execute.addGenericStep({
           script: `cdk diff --app './cdk.out/assembly-${stage}'${this.renderParameters(stage)}`
         });
 
         const deployStage = pipeline.addStage(`deploy:${stage}`, {
-          stageEnvironment: stage
+          environment: stage
         });
         
-        deployStage.preExecute.addStep({
+        deployStage.preExecute.addGenericStep({
           downloadPath: './cdk.out',
           artifactName: 'cdk.out'
         });
         
-        deployStage.execute.addStep({
+        deployStage.execute.addGenericStep({
           script: `cdk deploy --app './cdk.out/assembly-${stage}' --require-approval never${this.renderParameters(stage)}`
         })
       })  
     } else {
       const diffStage = pipeline.addStage(`diff`, {
-        stageEnvironment: 'diff'
+        environment: 'prod'
       });
-      diffStage.execute.addStep({
+      diffStage.execute.addGenericStep({
         script: `cdk diff --app './cdk.out/'${this.renderParameters('default')}`
       });
 
       const deployStage = pipeline.addStage(`deploy`, {
-        stageEnvironment: 'prod'
+        environment: 'prod'
       });
-      deployStage.execute.addStep({
+      deployStage.execute.addGenericStep({
         script: `cdk deploy --app './cdk.out/' --require-approval never${this.renderParameters('default')}`
       })
     }
@@ -92,5 +95,9 @@ export class CdkPipeline extends SingletonComponent {
       }).join(' ');
     }
     return '';
+  }
+
+  async preSynthesize() {
+    await super.preSynthesize();
   }
 }

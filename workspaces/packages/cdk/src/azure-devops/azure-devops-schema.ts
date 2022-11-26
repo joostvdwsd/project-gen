@@ -151,12 +151,12 @@ export namespace AzureDevops {
   }
 
   export interface Resources {
-    builds: unknown[];
-    containers: ResourceContainer[];
-    pipelines: unknown[];
-    repositories: ResourceRepository[];
-    webhooks: unknown[];
-    packages: unknown[];
+    builds?: unknown[];
+    containers?: ResourceContainer[];
+    pipelines?: unknown[];
+    repositories?: ResourceRepository[];
+    webhooks?: unknown[];
+    packages?: unknown[];
   }
 
   export interface VariableGroup {
@@ -742,7 +742,7 @@ export namespace AzureDevops {
 
   export type JobDeploymentStrategy = JobDeploymentStrategyRunOnce | JobDeploymentStrategyRolling | JobDeploymentStrategyCanary;
 
-  export interface JobDeployment {
+  export interface JobDeployment<Strategy = JobDeploymentStrategy> extends JobBase {
     deployment: string;
 
     /*****
@@ -753,7 +753,7 @@ export namespace AzureDevops {
     /*****
       * Execution strategy for this deployment
       */
-    strategy: JobDeploymentStrategy;
+    strategy: Strategy;
   }
 
   export type Job = TemplateReference | JobBuild | JobDeployment;
